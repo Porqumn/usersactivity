@@ -1,0 +1,106 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using ABTestTask.API.Extensions;
+using ABTestTask.API.Mappers;
+using AbTestTask.DAL;
+using AbTestTask.DAL.Repositories;
+using ABTestTask.Services;
+using ABTestTask.Services.Contracts;
+using ABTestTask.Services.Contracts.Interfaces;
+using ABTestTask.Services.Implementations;
+using AutoMapper;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+
+namespace ABTestTask.API
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+            
+            services.AddControllers();
+
+            
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+            services.AddDbContext<UserContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
+            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IBusinessMetricsCalculator, BusinessMetricsCalculator>();
+            services.AddScoped<IStatisticCollector, StatisticCollector>();
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new UserMapperConfiguration());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = Path.GetFullPath("../../client/abtesttask/build");
+            });
+
+            services.AddMvc();
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
+            app.ConfigureExceptionHandler();
+            
+            app.UseCors("MyPolicy");
+            
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+            
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = Path.GetFullPath("../../client/abtesttask/build");
+                
+                spa.UseReactDevelopmentServer(npmScript: "start");
+                });
+        }
+    }
+}
