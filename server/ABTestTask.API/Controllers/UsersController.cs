@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ABTestTask.API.Responses;
 using AbTestTask.DAL;
+using ABTestTask.DAL.DTOs;
 using AbTestTask.DAL.Models;
 using AbTestTask.DAL.Repositories;
-using ABTestTask.Services.Contracts.DTOs;
 using ABTestTask.Services.Contracts.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -27,17 +27,6 @@ namespace ABTestTask.API.Controllers
             _collector = collector;
             _mapper = mapper;
         }
-
-        [HttpGet("{id}", Name = nameof(GetUser))]
-        public async Task<ActionResult<User>> GetUser(int id)
-        {
-            if (!await _repository.IsItemWithIdExistsAsync<User>(id))
-            {
-                return NotFound();
-            }
-
-            return await _repository.GetByIdAsync<User>(id);
-        }
         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
@@ -45,38 +34,22 @@ namespace ABTestTask.API.Controllers
             return Ok(await _repository.GetAllAsNoTracking<User>().ToListAsync());
         }
 
-        [HttpPost]
-        public async Task<ActionResult> CreateUser([FromBody] UserDto userDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                var result = new CustomBadRequest(ModelStateToInvalidFields());
-                return result;
-            }
-
-            User user = _mapper.Map<User>(userDto);
-
-            await _repository.AddAsync(user);
-
-            return CreatedAtRoute(nameof(GetUser), new {id = user.Id}, userDto);
-        }
-
-        [HttpPost("bulk")]
-        public async Task<IActionResult> CreateMultipleUser([FromBody] UsersArray usersArray)
+        [HttpPut("bulk")]
+        public async Task<IActionResult> EditMultipleUser([FromBody] UsersArray usersArray)
         {
             var users = usersArray.Users;
             var validationResults = new List<FailedValidationResult>();
-            
-            for (int index = 0; index < users.Length; index++)
+
+            foreach (var user in users)
             {
                 ModelState.Clear();
-                TryValidateModel(users[index]);
+                TryValidateModel(user);
                 
                 if (!ModelState.IsValid)
                 {
                     var validationResult = new FailedValidationResult()
                     {
-                        FailedElementNumber = index + 1,
+                        FailedElementId = user.Id,
                         InvalidFields= ModelStateToInvalidFields()
                     };
                     validationResults.Add(validationResult);
@@ -93,49 +66,12 @@ namespace ABTestTask.API.Controllers
             {
                 User user = _mapper.Map<User>(userDto);
 
-                await _repository.AddAsync(user);
+                await _repository.UpdateAsync(user);
             }
             
             return Ok();
         }
         
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditUser(int id, [FromBody] UserDto updatedUserDto)
-        {
-            if (!await _repository.IsItemWithIdExistsAsync<User>(id))
-            {
-                return NotFound();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return  new CustomBadRequest(ModelStateToInvalidFields());
-            }
-
-            var user = await _repository.GetByIdAsync<User>(id);
-
-            var updatedUser = _mapper.Map<User>(updatedUserDto);
-
-            user.RegistrationDate = updatedUser.RegistrationDate;
-            user.LastActivityDate = updatedUser.LastActivityDate;
-
-            await _repository.UpdateAsync(user);
-
-            return Ok();
-        }
-        
-        [HttpDelete("{id}")]
-        public async Task<IActionResult>  CreateMultipleUser(int id)
-        {
-            if (!await _repository.IsItemWithIdExistsAsync<User>(id))
-            {
-                return NotFound();
-            }
-            
-            await _repository.DeleteAsync<User>(id);
-
-            return Ok();
-        }
         
         [HttpGet("statistics")]
         public ActionResult GetStatistics()

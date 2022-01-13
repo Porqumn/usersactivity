@@ -5,7 +5,7 @@ using AbTestTask.DAL.ValidationAttributes;
 namespace AbTestTask.DAL.Models
 {
     [RegistrationBeforeLastActivity]
-    public class UserDto
+    public class UserDto: Entity
     {
         [Required(ErrorMessage = "The registration date is required")]
         [DateNotInTheFuture]

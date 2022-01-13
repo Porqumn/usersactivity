@@ -1,7 +1,6 @@
-using AbTestTask.DAL;
 using AbTestTask.DAL.Models;
 
-namespace ABTestTask.Services.Contracts.DTOs
+namespace ABTestTask.DAL.DTOs
 {
     public class UsersArray
     {

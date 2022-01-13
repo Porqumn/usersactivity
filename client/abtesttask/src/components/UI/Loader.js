@@ -1,11 +1,8 @@
 import React from 'react';
-import cl from './Loader.module.css';
 
 const Loader = () => {
     return (
-        <div className={cl.loader}>
-
-        </div>
+            <span uk-spinner="ratio: 4.5" className="uk-margin-small-top"  style={{display: 'flex', justifyContent: 'center',}}></span>
     );
 };
 

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Bar} from 'react-chartjs-2';
-import {Container} from "react-bootstrap";
 import Chart from 'chart.js/auto';
 
 const Histogram = ({distribution, scale}) => {
@@ -18,7 +17,7 @@ const Histogram = ({distribution, scale}) => {
     },[])
 
     return (
-        <Container>
+        <div className="uk-container">
             <Bar
                 datasetIdKey='id'
                 data={{
@@ -47,7 +46,7 @@ const Histogram = ({distribution, scale}) => {
                         },
                 }}}
             />
-        </Container>
+        </div>
 
     );
 };

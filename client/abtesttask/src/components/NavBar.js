@@ -1,23 +1,34 @@
 import React from 'react';
-import {Container, Nav, Navbar} from "react-bootstrap";
 import {useNavigate} from "react-router";
-import {ABOUT_ROUTE, TABLE_ROUTE} from "../utils/consts";
-import {Button} from "bootstrap";
+import {ABOUT_ROUTE, CALCULATE_ROUTE, TABLE_ROUTE} from "../utils/consts";
 
 const NavBar = () => {
 
     const navigate = useNavigate()
 
     return (
-            <Navbar bg="dark" variant="dark">
-                <Container>
-                    <Navbar.Brand>Users activity</Navbar.Brand>
-                    <Nav className="me-auto">
-                        <Nav.Link onClick={()=>{navigate(TABLE_ROUTE, { replace: true })}}>Home</Nav.Link>
-                        <Nav.Link onClick={()=>{navigate(ABOUT_ROUTE, { replace: true })}}>About</Nav.Link>
-                    </Nav>
-                </Container>
-            </Navbar>
+        <div className="uk-container">
+            <nav className="uk-navbar-container" uk-navbar>
+                <div className="uk-navbar-left">
+                    <a className="uk-navbar-item uk-logo" onClick={() => navigate(TABLE_ROUTE)}>Users activity</a>
+                    <ul className="uk-navbar-nav">
+                        <li>
+                            <a onClick={() => navigate(TABLE_ROUTE)}>
+                                Home
+                            </a>
+                        </li>
+                    </ul>
+                    <ul className="uk-navbar-nav">
+                        <li>
+                            <a onClick={() => navigate(ABOUT_ROUTE)}>
+                                About
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
     );
 };
 

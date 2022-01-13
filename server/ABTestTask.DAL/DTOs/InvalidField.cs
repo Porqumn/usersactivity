@@ -1,4 +1,4 @@
-namespace ABTestTask.Services.Contracts.DTOs
+namespace ABTestTask.DAL.DTOs
 {
     public class InvalidField
     {

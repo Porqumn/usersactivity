@@ -1,18 +1,17 @@
 import React from 'react';
-import {Container, Stack} from "react-bootstrap";
 
 const AboutPage = () => {
     return (
-        <div>
-            <Container className="mt-3">
-                <Stack gap={3}>
-                    <h1>Hi, ABTestReal!</h1>
+            <div className="uk-container uk-margin-small-top">
+                <div className="uk-grid">
                     <div>
-                        This introductory task was completed by Ivan Umnov
+                        <h1>Hi, ABTestReal!</h1>
+                        <div>
+                            This introductory task was completed by Ivan Umnov
+                        </div>
                     </div>
-                </Stack>
-            </Container>
-        </div>
+                </div>
+            </div>
     );
 };
 

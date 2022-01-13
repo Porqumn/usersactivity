@@ -6,13 +6,13 @@ const $host = axios.create({
 
 export default class APIService {
 
-         static async getAll() {
+    static async getUsers() {
         const response = await $host.get('users');
         return response
     }
 
-    static async addUsers(users) {
-        const response = await $host.post('users/bulk', {"users": users })
+    static async editUsers(users) {
+        const response = await $host.put('users/bulk', {"users": users })
             .catch((error) => {
                 {
                     return error.response;
@@ -21,25 +21,6 @@ export default class APIService {
         return response;
     }
 
-    static async editUser(id, user) {
-        const response = await $host.put('users' + '/' + id, user)
-            .catch((error) => {
-                {
-                    return error.response;
-                }
-            })
-        return response;
-    }
-
-    static async deleteUser(id) {
-        const response = await $host.delete('users' + '/' + id)
-            .catch((error) => {
-                {
-                    return error.response;
-                }
-            })
-        return response;
-    }
 
     static async getStatistics() {
         const response = await $host.get('users/statistics')

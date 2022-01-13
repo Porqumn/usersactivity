@@ -18,19 +18,27 @@ namespace ABTestTask.Services.Implementations
         
         public double GetRollingRetentionDay(int days)
         {
-            var countOfUsersReturnedToTheSystemOnOrAfterXDayAfterRegistration = _repository
-                .GetAllAsNoTracking<User>()
-                .Select(user =>
-                    DateHelper.CountOfDaysBetweenDates(user.RegistrationDate, user.LastActivityDate) >= days)
-                .Count();
+            int countOfUsersReturnedToTheSystemOnOrAfterXDayAfterRegistration = 0;
+            int countOfUsersRegisteredInTheSystemXDaysAgoOrEarlier = 0;
             
-            var countOfUsersRegisteredInTheSystemXDaysAgoOrEarlier = _repository
-                .GetAllAsNoTracking<User>()
-                .Select(user =>
-                    DateHelper.CountOfDaysBetweenDates(user.RegistrationDate, DateTime.Now) >= days)
-                .Count();
+            _repository.GetAllAsNoTracking<User>().ToList().ForEach(user =>
+            {
+                if (DateHelper.CountOfDaysBetweenDates(user.RegistrationDate, user.LastActivityDate) >= days)
+                {
+                    countOfUsersReturnedToTheSystemOnOrAfterXDayAfterRegistration++;
+                }
+                
+                if (DateHelper.CountOfDaysBetweenDates(user.RegistrationDate, DateTime.Now) >= days)
+                {
+                    countOfUsersRegisteredInTheSystemXDaysAgoOrEarlier++;
+                }
+                
+                
+            });
 
-            return (double) (countOfUsersReturnedToTheSystemOnOrAfterXDayAfterRegistration) /
+            return countOfUsersRegisteredInTheSystemXDaysAgoOrEarlier == 0
+                ? -1
+                : (double) (countOfUsersReturnedToTheSystemOnOrAfterXDayAfterRegistration) /
                 countOfUsersRegisteredInTheSystemXDaysAgoOrEarlier * 100;
         }
     }
