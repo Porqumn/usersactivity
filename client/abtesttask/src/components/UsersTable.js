@@ -67,10 +67,10 @@ const UsersTable = ({setInfoMessage, users, fetchUsers ,setUsers}) => {
     return (
         <div className="uk-container" onClick={() => setEditMode({status: false, rowId: 0})}>
             <div className="uk-flex uk-align-right uk-margin-top">
-                <button className="uk-button-large uk-button-secondary uk-text-uppercase uk-margin-right" onClick={() => navigate(CALCULATE_ROUTE)}>
+                <button className="uk-button-large uk-border-pill uk-button-secondary uk-text-uppercase uk-margin-right" onClick={() => navigate(CALCULATE_ROUTE)}>
                     Calculate
                 </button>
-                <button className="uk-button-large uk-button-primary uk-text-uppercase" disabled={editableUsersId.length === 0} onClick={() => editedUsers()}>
+                <button className="uk-button-large uk-border-pill uk-button-primary uk-text-uppercase" disabled={editableUsersId.length === 0} onClick={() => editedUsers()}>
                     Save
                 </button>
             </div>

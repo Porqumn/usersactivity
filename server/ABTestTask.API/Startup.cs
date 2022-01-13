@@ -69,10 +69,10 @@ namespace ABTestTask.API
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
             
-            /*services.AddSpaStaticFiles(configuration =>
+            services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = Path.GetFullPath("../../client/abtesttask/build");
-            });*/
+            });
             
             services.AddSwaggerGen(c =>
             {
@@ -106,12 +106,12 @@ namespace ABTestTask.API
                 endpoints.MapControllers();
             });
             
-            /*app.UseSpa(spa =>
+            app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = Path.GetFullPath("../../client/abtesttask/build");
                 
                 spa.UseReactDevelopmentServer(npmScript: "start");
-                });*/
+                });
         }
     }
 }
