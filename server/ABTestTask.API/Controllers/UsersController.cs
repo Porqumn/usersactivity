@@ -38,6 +38,15 @@ namespace ABTestTask.API.Controllers
         public async Task<IActionResult> EditMultipleUser([FromBody] UsersArray usersArray)
         {
             var users = usersArray.Users;
+
+            foreach (var user in users)
+            {
+                if (! await _repository.IsItemWithIdExistsAsync<User>(user.Id))
+                {
+                    return NotFound();
+                }
+            }
+
             var validationResults = new List<FailedValidationResult>();
 
             foreach (var user in users)
