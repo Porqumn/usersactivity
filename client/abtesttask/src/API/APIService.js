@@ -12,7 +12,7 @@ export default class APIService {
     }
 
     static async editUsers(users) {
-        const response = await $host.put('users/bulk', {"users": users })
+        const response = await $host.put('users/bulk', {"users": users})
             .catch((error) => {
                 {
                     return error.response;

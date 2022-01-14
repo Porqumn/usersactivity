@@ -14,7 +14,7 @@ const Histogram = ({distribution, scale}) => {
 
     useEffect(() => {
         sortValues()
-    },[])
+    }, [])
 
     return (
         <div className="uk-container">
@@ -24,27 +24,28 @@ const Histogram = ({distribution, scale}) => {
                     labels: sortedDistribution.map(x => x.value),
                     datasets: [{
                         label: 'Sum of users',
-                        data:  sortedDistribution.map(x => x.number),
+                        data: sortedDistribution.map(x => x.number),
                     }]
                 }}
                 options={{
                     scales: {
-                        x:{
+                        x: {
                             type: scale,
-                            title:{
+                            title: {
                                 display: true,
                                 text: "Lifespan users in days"
                             }
                         },
-                        y:{
+                        y: {
                             type: scale,
-                            title:{
+                            title: {
                                 display: true,
                                 text: "Sum of users"
                             },
                             beginAtZero: true
                         },
-                }}}
+                    }
+                }}
             />
         </div>
 
