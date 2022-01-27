@@ -74,7 +74,7 @@ const UsersTable = ({setInfoMessage, users, fetchUsers, setUsers}) => {
                     Save
                 </button>
             </div>
-            <table class="uk-table uk-table-hover uk-table-divider uk-table-middle">
+            <table className="uk-table uk-table-hover uk-table-divider uk-table-middle">
                 <thead>
                 <tr>
                     <th>User Id</th>

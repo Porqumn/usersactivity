@@ -28,12 +28,14 @@ namespace ABTestTask.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;  
+        public IConfiguration Configuration { get; }
+        
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -68,12 +70,15 @@ namespace ABTestTask.API
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-            
-            services.AddSpaStaticFiles(configuration =>
+
+            if (_env.IsDevelopment())
             {
-                configuration.RootPath = Path.GetFullPath("../../client/abtesttask/build");
-            });
-            
+                services.AddSpaStaticFiles(configuration =>
+                {
+                    configuration.RootPath = Path.GetFullPath("../../client/abtesttask/build");
+                });
+            }
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebApplication", Version = "v1"});
@@ -86,6 +91,13 @@ namespace ABTestTask.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsProduction())
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+                using var context = scope.ServiceProvider.GetService<UserContext>();
+                context.Database.Migrate();
+            }
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -105,13 +117,16 @@ namespace ABTestTask.API
             {
                 endpoints.MapControllers();
             });
-            
-            app.UseSpa(spa =>
+
+            if (env.IsDevelopment())
             {
-                spa.Options.SourcePath = Path.GetFullPath("../../client/abtesttask/build");
-                
-                spa.UseReactDevelopmentServer(npmScript: "start");
+                app.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = Path.GetFullPath("../../client/abtesttask/build");
+
+                    spa.UseReactDevelopmentServer(npmScript: "start");
                 });
+            }
         }
     }
 }

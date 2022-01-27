@@ -8,7 +8,7 @@ const NavBar = () => {
 
     return (
         <div className="uk-container">
-            <nav className="uk-navbar-container" uk-navbar>
+            <nav className="uk-navbar-container">
                 <div className="uk-navbar-left">
                     <a className="uk-navbar-item uk-logo" onClick={() => navigate(TABLE_ROUTE)}>Users activity</a>
                     <ul className="uk-navbar-nav">

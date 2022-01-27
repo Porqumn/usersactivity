@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const $host = axios.create({
-    baseURL: 'https://localhost:5001/api/'
+    baseURL: process.env.REACT_APP_API_URL
 })
 
 export default class APIService {
