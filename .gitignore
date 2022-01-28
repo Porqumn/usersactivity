@@ -46,4 +46,4 @@ _UpgradeReport_Files/
 Thumbs.db
 Desktop.ini
 .DS_Store
-/server/ABTestTask.API/appsettings.Production.json
+appsettings.Production.json
